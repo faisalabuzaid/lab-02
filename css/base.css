@@ -1,0 +1,34 @@
+@import url('../css/layout.css');
+@import url('../css/module.css');
+
+* {
+    box-sizing: border-box;
+}
+
+
+body {
+    min-height:100vh ;
+    /* width:960px;  */
+    text-align: center;
+    font-family: 'Courgette', cursive;
+}
+
+img {
+    width:70%;
+}
+section {
+    float:left;
+    width:500px;
+    height: 500px;
+    overflow: auto;
+    margin: 50px 10px;
+
+}
+
+footer {
+    margin: 15px;
+    text-align: center;
+    clear:both;
+    width: 100%;
+    position: static;
+}
