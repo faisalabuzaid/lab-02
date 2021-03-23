@@ -27,20 +27,22 @@
         </fieldset>
     </header>        
     <main>
-            <section class="photoTemplate">
-                <h2></h2>
-                <img src="" alt="">
-                <p></p>
-                <p class="keyword"></p>
-                <article></article>
-            </section>
+        <template id="mustache-template-1" type="text/x-tmpl-mustache">
+            <div class="template-1">
+                <h2>{{title}}</h2>
+                <img src="{{image_url}}" />
+                <p ></p>{{description}}</p>
+                <p class="keyword">{{keyword}}</p>
+                <p class="hornsNumber">Horns Number Is {{horns}}</p>
+            </div>
+        </template>
             <template id="mustache-template" type="text/x-tmpl-mustache">
                 <div class="template">
                     <h2>{{title}}</h2>
                     <img src="{{image_url}}" />
-                    <p>{{description}}</p>
+                    <p ></p>{{description}}</p>
                     <p class="keyword">{{keyword}}</p>
-                    <p>{{horns}}</p>
+                    <p class="hornsNumber">Horns Number Is {{horns}}</p>
                 </div>
             </template>
     </main>

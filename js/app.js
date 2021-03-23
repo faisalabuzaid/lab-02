@@ -1,6 +1,6 @@
 'use strict';
 
-let all =[];
+
 $('document').ready(function () {
 
   const Gallery = function(name) {
@@ -9,58 +9,87 @@ $('document').ready(function () {
     this.description = name.description;
     this.keyword = name.keyword;
     this.horns = name.horns;
-    all.push(this);
   };
 
-  // Gallery.prototype.render = function() {
-  //   let galleryContainer = $('.photoTemplate').clone();
-  //   $('main').append(galleryContainer);
-  //   let list = $('<option></option>').text(this.keyword);
-  //   $('select').append(list);
-  //   galleryContainer.find('h2').text(this.title);
-  //   galleryContainer.find('img').attr('src', this.image_url);
-  //   galleryContainer.find('p').text(this.description);
-  //   galleryContainer.find('.keyword').text(this.keyword);
-  //   galleryContainer.find('article').text(`Horns Number Is: ${this.horns}`);
-  //   galleryContainer.attr('class', this.keyword);
+  Gallery.prototype.render = function() {
+    // $('.filter')
+    //   .find('option')
+    //   .remove()
+    //   .end()
+    //   .append('<option value="whatever">'+this.keyword+'</option>')
+    //   .val(this.keyword)
+    // ;
+    let template = $('#mustache-template-1').html();
+    let pageHtml = Mustache.render(template, this);
+    $('main').append(pageHtml);
+    console.log(pageHtml);
 
-  // };
-  Gallery.prototype.renderTwo = function() {
+    return pageHtml;
+
+
+  };
+  Gallery.prototype.renderTwo = function () {
     let template = $('#mustache-template').html();
-    console.log(template);
-    //2. use Mustache to render new html .render method
-    let html = Mustache.render(template, this);
-    //3.return the html
-    return html;
+    let pageHtml = Mustache.render(template, this);
+    $('main').append(pageHtml);
+    console.log(pageHtml);
 
+    return pageHtml;
   };
+
   const ajaxSettings = {
     method: 'get',
     dataType: 'json'
   };
 
-  // $.ajax('data/page-1.json', ajaxSettings).then(data => {
-  //   data.forEach(item => {
-  //     let buildup = new Gallery(item);
-  //     buildup.render();
-  //   });
-  // });
-
-  $.ajax('data/page-2.json', ajaxSettings).then(data => {
+  $('.template').hide();
+  $('.template-1').show();
+  $.ajax('data/page-1.json', ajaxSettings).then(data => {
     data.forEach(item => {
       let buildup = new Gallery(item);
-      buildup.renderTwo();
+      buildup.render();
     });
-  }); });
+  });
+
+  $('button').click(function() {
+    if(this.id === 'firstpage') {
+      $('.template-1').remove();
+      $('.template').hide();
+      $('.template-1').show();
+      $.ajax('data/page-1.json', ajaxSettings).then(data => {
+        data.forEach(item => {
+          let buildup = new Gallery(item);
+          buildup.render();
+        });
+      });
+    } else if(this.id === 'secondpage'){
+      $('.template').remove();
+      $.ajax('data/page-2.json', ajaxSettings).then(data => {
+        data.forEach(item => {
+          let buildup = new Gallery(item);
+          $('.template-1').hide();
+          buildup.renderTwo();
+        });
+      });
+    } else {
+      $.ajax('data/page-1.json', ajaxSettings).then(data => {
+        data.forEach(item => {
+          let buildup = new Gallery(item);
+          buildup.render();
+        });
+      });
+    }
+  });
 
 
-// $('select').on('change', function () {
-//   let selected = this.value;
-//   if(this.value !== 'default') {
-//     $('section').hide();
-//     $(`.${selected}`).show();
-//   } else {
-//     $('section').show();
-//   }
+  $('select').on('change', function () {
+    let selected = this.value;
+    if(this.value !== 'default') {
+      $('.template').hide();
+      $(`.${selected}`).show();
+    } else {
+      $('.template').show();
+    }
 
-// });
+  });
+});
