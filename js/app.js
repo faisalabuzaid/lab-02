@@ -12,17 +12,29 @@ $('document').ready(function () {
   };
 
   Gallery.prototype.render = function() {
-    let galleryContainer = $('.photoTemplate').clone();
-    $('main').append(galleryContainer);
-    let list = $('<option></option>').text(this.keyword);
-    $('select').append(list);
-    galleryContainer.find('h2').text(this.title);
-    galleryContainer.find('img').attr('src', this.image_url);
-    galleryContainer.find('p').text(this.description);
-    galleryContainer.find('.keyword').text(this.keyword);
-    galleryContainer.find('article').text(`Horns Number Is: ${this.horns}`);
-    galleryContainer.attr('class', this.keyword);
+    // $('.filter')
+    //   .find('option')
+    //   .remove()
+    //   .end()
+    //   .append('<option value="whatever">'+this.keyword+'</option>')
+    //   .val(this.keyword)
+    // ;
+    let template = $('#mustache-template-1').html();
+    let pageHtml = Mustache.render(template, this);
+    $('main').append(pageHtml);
+    console.log(pageHtml);
 
+    return pageHtml;
+
+
+  };
+  Gallery.prototype.renderTwo = function () {
+    let template = $('#mustache-template').html();
+    let pageHtml = Mustache.render(template, this);
+    $('main').append(pageHtml);
+    console.log(pageHtml);
+
+    return pageHtml;
   };
 
   const ajaxSettings = {
@@ -30,16 +42,54 @@ $('document').ready(function () {
     dataType: 'json'
   };
 
+  $('.template').hide();
+  $('.template-1').show();
   $.ajax('data/page-1.json', ajaxSettings).then(data => {
     data.forEach(item => {
       let buildup = new Gallery(item);
       buildup.render();
     });
   });
-});
 
-$('select').on('change', function () {
-  let selected = this.value;
-  $('section').hide();
-  $(`.${selected}`).show();
+  $('button').click(function() {
+    if(this.id === 'firstpage') {
+      $('.template-1').remove();
+      $('.template').hide();
+      $('.template-1').show();
+      $.ajax('data/page-1.json', ajaxSettings).then(data => {
+        data.forEach(item => {
+          let buildup = new Gallery(item);
+          buildup.render();
+        });
+      });
+    } else if(this.id === 'secondpage'){
+      $('.template').remove();
+      $.ajax('data/page-2.json', ajaxSettings).then(data => {
+        data.forEach(item => {
+          let buildup = new Gallery(item);
+          $('.template-1').hide();
+          buildup.renderTwo();
+        });
+      });
+    } else {
+      $.ajax('data/page-1.json', ajaxSettings).then(data => {
+        data.forEach(item => {
+          let buildup = new Gallery(item);
+          buildup.render();
+        });
+      });
+    }
+  });
+
+
+  $('select').on('change', function () {
+    let selected = this.value;
+    if(this.value !== 'default') {
+      $('.template').hide();
+      $(`.${selected}`).show();
+    } else {
+      $('.template').show();
+    }
+
+  });
 });
