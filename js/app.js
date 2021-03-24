@@ -1,7 +1,8 @@
 'use strict';
-let pageTwo =[];
-let pageOne=[];
+
 $('document').ready(function () {
+
+  let testArr =[];
 
   const Gallery = function(name) {
     this.title= name.title;
@@ -9,11 +10,10 @@ $('document').ready(function () {
     this.description = name.description;
     this.keyword = name.keyword;
     this.horns = name.horns;
-    // all.push(this);
   };
 
   Gallery.prototype.render = function() {
-    $('select').append('<option>'+this.keyword+'</option>');
+    $('.filter').append('<option>'+this.keyword+'</option>');
     let template = $('#mustache-template-1').html();
     let pageHtml = Mustache.render(template, this);
     $('main').append(pageHtml);
@@ -23,7 +23,7 @@ $('document').ready(function () {
 
   };
   Gallery.prototype.renderTwo = function () {
-    $('select').append('<option>'+this.keyword+'</option>');
+    $('.filter').append('<option>'+this.keyword+'</option>');
     let template = $('#mustache-template').html();
     let pageHtml = Mustache.render(template, this);
     $('main').append(pageHtml);
@@ -45,47 +45,51 @@ $('document').ready(function () {
     method: 'get',
     dataType: 'json'
   };
-  pageOne=[];
+
   $.ajax('data/page-1.json', ajaxSettings).then(data => {
+    testArr =[];
     data.forEach(item => {
       let buildup = new Gallery(item);
+      testArr.push(buildup);
       buildup.render();
       buildup.renderList();
-      pageOne.push(buildup);
-    });
 
+    });
+    console.log(testArr);
   });
 
   $('button').click(function() {
     if(this.id === 'firstpage') {
-      pageOne=[];
       $('div').remove();
       $.ajax('data/page-1.json', ajaxSettings).then(data => {
+        testArr = [];
         data.forEach(item => {
           let buildup = new Gallery(item);
+          testArr.push(buildup);
           buildup.render();
           buildup.renderList();
-          pageOne.push(buildup);
+
         });
-      });
-    } else if(this.id === 'secondpage'){
-      pageTwo =[];
-      $('div').remove();
-      $.ajax('data/page-2.json', ajaxSettings).then(data => {
-        data.forEach(item => {
-          let buildup = new Gallery(item);
-          buildup.renderTwo();
-          buildup.renderList();
-          pageTwo.push(buildup);
-        });
+        console.log(testArr);
 
       });
-      console.log(pageTwo);
+    } else if(this.id === 'secondpage'){
+      $('div').remove();
+      $.ajax('data/page-2.json', ajaxSettings).then(data => {
+        testArr = [];
+        data.forEach(item => {
+          let buildup = new Gallery(item);
+          testArr.push(buildup);
+          buildup.renderTwo();
+          buildup.renderList();
+        });
+        console.log(testArr);
+      });
     }
   });
 
 
-  $('select').on('change', function () {
+  $('.filter').on('change', function () {
     let selected = this.value;
     console.log(selected);
     if(this.value !== 'default') {
@@ -96,4 +100,24 @@ $('document').ready(function () {
     }
 
   });
+
+  $('#sort').on('change', function () {
+    let selected = this.value;
+    console.log(selected);
+    if(this.value === 'title') {
+      $('div').hide();
+      testArr.sort((a,b) => a.title > b.title ? 1 : -1);
+      console.log(testArr);
+      testArr.forEach(item => {
+        item.render();
+
+      });
+    }
+    //   $(`div.${selected}`).show();
+    //  else {
+    //   $('div').show();
+    // }
+
+  });
+
 });
