@@ -20,15 +20,20 @@
         </ul>
         <fieldset>
         <select class="filter">
-            <legend>
             <option value="default">Filter by keyword</option>
-            </legend>
         </select>
         </fieldset>
+        <fieldset>
+        <select id="sort">
+            <option value="default">Sort by</option>
+            <option value="title">Sort by Title</option>
+            <option value="horns">Sort by horns</option>
+        </select>
+    </fieldset>
     </header>        
     <main>
         <template id="mustache-template-1" type="text/x-tmpl-mustache">
-            <div class="template-1">
+            <div class="{{keyword}}">
                 <h2>{{title}}</h2>
                 <img src="{{image_url}}" />
                 <p ></p>{{description}}</p>
@@ -37,7 +42,7 @@
             </div>
         </template>
             <template id="mustache-template" type="text/x-tmpl-mustache">
-                <div class="template">
+                <div class="{{keyword}}">
                     <h2>{{title}}</h2>
                     <img src="{{image_url}}" />
                     <p ></p>{{description}}</p>
